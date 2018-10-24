@@ -8,6 +8,7 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const cors         = require('cors');
 
 
 mongoose.Promise = Promise;
@@ -25,6 +26,7 @@ const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.
 const app = express();
 
 // Middleware Setup
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,11 +49,17 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
+app.locals.title = 'Acromático API';
 
 
 
 const index = require('./routes/index');
+const user = require('./routes/auth/usuario');
+const producto = require('./routes/api/producto');
+const cotizacion = require('./routes/api/cotizacion');
+app.use('/auth', user);
+app.use('/api/producto', producto);
+app.use('/api/cotizacion', cotizacion);
 app.use('/', index);
 
 
