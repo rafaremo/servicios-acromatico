@@ -67,7 +67,7 @@ usuarioSchema.methods.generateAuthToken = function () {
   var token = jwt.sign({
     _id: user._id.toHexString(),
     access
-  }, 'rafaeselsecreto').toString();
+  }, process.env.JWT).toString();
 
   user.tokens = user.tokens.concat([{access, token}]);
 
@@ -81,7 +81,7 @@ usuarioSchema.statics.findByToken = function (token) {
   let decoded;
 
   try {
-    decoded = jwt.verify(token, 'rafaeselsecreto');
+    decoded = jwt.verify(token, process.env.JWT);
   } catch (e) {
     // return new Promise((res,rej) => {
     //   rej('auth error');
