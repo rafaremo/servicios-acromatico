@@ -75,4 +75,24 @@ usuarioSchema.methods.generateAuthToken = function () {
   });
 }
 
+usuarioSchema.statics.findByToken = function (token) {
+  let User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'rafaeselsecreto');
+  } catch (e) {
+    // return new Promise((res,rej) => {
+    //   rej('auth error');
+    // });
+    return Promise.reject('Auth Error');
+  }
+
+  return User.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+}
+
 module.exports = mongoose.model('Usuario', usuarioSchema);
